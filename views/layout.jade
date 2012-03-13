@@ -1,0 +1,32 @@
+!!!
+html
+	head
+		title= title
+
+		// sets the screen width to the pixel width of the device
+		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0')
+
+		// import jQuery Mobile
+		link(rel='stylesheet', href='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css')
+		script(src='http://code.jquery.com/jquery-1.6.4.min.js')
+		script(src='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js')
+
+		// load custom css
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		// import custom scripts
+		script(src='/javascripts/main.js')
+
+	body
+		div(data-role='page', data-theme='b') 
+			// header
+			div(data-role='header', data-theme='b')
+				div
+					h4=title
+
+			!{body}
+
+			// footer
+			div(data-role='footer', data-theme='b')
+				div
+					h4 Created by Steven Nguyen

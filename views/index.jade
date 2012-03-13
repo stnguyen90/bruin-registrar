@@ -1,0 +1,9 @@
+div(data-role='content')
+	form(method='get', action='listClasses')
+		div(data-role='fieldcontain')
+			label(for='term') Term:
+			select(name='term', id='term') !{terms}
+		div(data-role='fieldcontain')
+			label(for='subject') Subject:
+			select(name='subject', id='subject') !{subjects}
+		input(data-theme='e', type='submit', value='Get Classes')

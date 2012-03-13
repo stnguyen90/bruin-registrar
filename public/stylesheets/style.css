@@ -1,0 +1,18 @@
+body 
+{
+	padding: 50px;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+	background: #CCC;
+}
+
+a 
+{
+	color: #00B7FF;
+}
+
+.ui-header div, .ui-footer div
+{
+	text-align: center;
+}
+

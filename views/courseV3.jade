@@ -1,0 +1,52 @@
+div(data-role='content')
+	//!{course}
+	mixin displayData(course)
+		h3 #{course.lec} - #{course.fac}
+		ul(data-role='listview')
+			each row in course.data
+				li
+					div(class='ui-grid-b')
+						div(class='ui-block-a') 
+							h6 #{row.type} #{row.section}
+						div(class='ui-block-b')
+							if row.id != 'Crs Info' 
+								h6 #{row.id}
+						div(class='ui-block-c')
+						if row.id != 'Crs Info' && row.status == 'Open' || row.status == 'W-List'
+							h6 
+								a(href='https://www.ursa.ucla.edu/logon/logon.asp?extfunction=enrollclass&extapplication=myucla&uid=000000000&term=#{term}&course=#{row.id}') Enroll Now!
+						div(class='ui-block-a') 
+							p Days: #{row.days}
+						div(class='ui-block-b') 
+							p #{row.start}-#{row.end}
+						div(class='ui-block-c') 
+							p #{row.building} #{row.room}
+						div(class='ui-block-a')
+							p En: #{row.enrolled}/#{row.enrollCap}
+						div(class='ui-block-b')
+							p WL: #{row.waitlist}/#{row.waitlistCap}
+						if row.status == 'Closed'
+							div(class='ui-block-c', style='color:red') 
+								p #{row.status}
+						else if row.status == 'Open'
+							div(class='ui-block-c', style='color:green') 
+								p #{row.status}
+						else if row.status == 'W-List'
+							div(class='ui-block-c', style='color:purple') 
+								p #{row.status}
+						else
+							div(class='ui-block-c') 
+								p #{row.status}
+
+	div(data-role='collapsible-set')
+		each course in courses
+			if course.lec.search('1') >= 0
+				div(data-role='collapsible', data-collapsed='false')
+					mixin displayData(course)
+			else
+				div(data-role='collapsible')
+					mixin displayData(course)
+					
+					
+	a(data-role='button', data-direction='reverse', data-prefetch, href='listClasses?term=#{term}&subject=#{subject}') Back
+
