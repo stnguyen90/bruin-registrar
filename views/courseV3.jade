@@ -14,7 +14,7 @@ div(data-role='content')
 						div(class='ui-block-c')
 						if row.id != 'Crs Info' && row.status == 'Open' || row.status == 'W-List'
 							h6 
-								a(href='https://www.ursa.ucla.edu/logon/logon.asp?extfunction=enrollclass&extapplication=myucla&uid=000000000&term=#{term}&course=#{row.id}') Enroll Now!
+								a(target='_blank', href='https://www.ursa.ucla.edu/logon/logon.asp?extfunction=enrollclass&extapplication=myucla&uid=000000000&term=#{term}&course=#{row.id}') Enroll Now!
 						div(class='ui-block-a') 
 							p Days: #{row.days}
 						div(class='ui-block-b') 
