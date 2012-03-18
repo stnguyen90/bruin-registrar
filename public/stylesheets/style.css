@@ -16,3 +16,27 @@ a
 	text-align: center;
 }
 
+.ui-footer div h4 a.ui-link
+{
+	color: white;
+}
+
+.ui-footer div h4 a.ui-link:link
+{
+	color: white;
+}
+
+.ui-footer div h4 a.ui-link:visited
+{
+	color: white;
+}
+
+.ui-footer div h4 a.ui-link:hover
+{
+	color: white;
+}
+
+.ui-footer div h4 a.ui-link:active
+{
+	color: white;
+}
