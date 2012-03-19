@@ -152,6 +152,16 @@ exports.viewCourse = function(req, res)
 						{
 							
 							var id		= tr.children('td.dgdClassDataColumnIDNumber').text();
+							if ( id == 'Crs Info') // if this says Crs Info, need to get the id from the link
+							{
+								// link follows the fomat "subdet.aspx?srs=187101200&term=12S&session="
+								var link = tr.children('td.dgdClassDataColumnIDNumber a').attr('href');
+								// split to get 187101200
+								link = link.split('?');
+								link = link[1].split('&amp;');
+								link = link[0].split('=');
+								link = link[1];
+							}
 							var type	= tr.children('td.dgdClassDataActType').text();
 							var section	= tr.children('td.dgdClassDataSectionNumber').text();
 							var days	= tr.children('td.dgdClassDataDays').text().replace(/ /g, '');
@@ -168,6 +178,7 @@ exports.viewCourse = function(req, res)
 							courses[courseIdx].data.push(
 							{ 
 								'id'			: id,
+								'link'			: link,
 								'type'			: type,
 								'section'		: section,
 								'days'			: days,
@@ -199,5 +210,49 @@ exports.viewCourse = function(req, res)
 	}
 	else
 		res.render('error', { title : 'Sorry!', error : 'Please select a term, subject, and course!'});
+
+};
+
+/*
+ * get chosen course details
+ */
+exports.viewCourseDetails = function(req, res)
+{
+	
+	var request = require('request'),
+		cheerio = require('cheerio');
+
+	var term = (req.param('term')) ? req.param('term') : '';
+	var courseID = (req.param('courseID')) ? req.param('courseID') : '';
+
+	// uncomment to disable scrape
+	// res.render('index', { title: 'Form', terms: 'terms', subjects: 'subjects' } );
+
+	if ( term.length > 0 && courseID.length > 0)
+	{
+		request({ uri:'http://www.registrar.ucla.edu/schedule/subdet.aspx?srs=' + courseID + '&term=' + term }, function (error, response, body) 
+		{
+			if (error && response.statusCode !== 200) 
+			{
+				console.log('Error loading the page');
+				res.render('error', { title : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+			}
+
+			// the original html from the registrar has extra tags that close the tables 
+			// prematurely the following line removes these closing tags so we can 
+			// properly parse the rest of the dom
+			var $ = cheerio.load(body);
+
+			// cheerio is now loaded on the window created from 'body'
+			var sectionInfo = $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').html();
+			var courseBody = $('.tblCourseBody_detselect').html();
+
+			var title = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text();
+
+			res.render('courseDetails', { 'title' : title, 'html' : sectionInfo + courseBody });
+		});
+	}
+	else
+		res.render('error', { title : 'Sorry!', error : 'Missing term and/or course ID!'});
 
 };

@@ -40,3 +40,8 @@ a
 {
 	color: white;
 }
+
+.courseheadbold, .bold
+{
+	font-weight: bold;
+}

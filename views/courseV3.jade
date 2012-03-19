@@ -9,8 +9,12 @@ div(data-role='content')
 						div(class='ui-block-a') 
 							h6 #{row.type} #{row.section}
 						div(class='ui-block-b')
-							if row.id != 'Crs Info' 
-								h6 #{row.id}
+						if row.id != 'Crs Info' 
+							h6
+								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.id}') #{row.id}
+						else
+							h6
+								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.link}') #{row.id}
 						div(class='ui-block-c')
 						if ( row.id != 'Crs Info' && (row.status == 'Open' || row.status == 'W-List') )
 							h6 

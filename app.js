@@ -32,6 +32,7 @@ app.configure('production', function(){
 app.get('/', routes.index);
 app.get('/listClasses', routes.listClasses);
 app.get('/viewCourse', routes.viewCourse);
+app.get('/viewCourseDetails', routes.viewCourseDetails);
 
 
 var port = (process.env.VMC_APP_PORT || 3000);
