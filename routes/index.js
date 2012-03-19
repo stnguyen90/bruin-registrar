@@ -22,7 +22,7 @@ exports.index = function(req, res)
 		// cheerio is now loaded on the window created from 'body'
 		var termSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstTermDisp').html();			// retrieve the terms
 		var subjectSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea').html();	// retrieve the subjects
-		res.render('index', { title : 'UCLA Registrar', terms : termSelect, subjects : subjectSelect });
+		res.render('index', { title : 'Bruin Registrar', terms : termSelect, subjects : subjectSelect });
 	});
 };
 
