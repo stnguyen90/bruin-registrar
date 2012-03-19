@@ -9,16 +9,16 @@ div(data-role='content')
 						div(class='ui-block-a') 
 							h6 #{row.type} #{row.section}
 						div(class='ui-block-b')
-						if row.id != 'Crs Info' 
-							h6
-								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.id}') #{row.id}
-						else
-							h6
-								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.link}') #{row.id}
+							if row.id != 'Crs Info' 
+								h6
+									a(href='/viewCourseDetails?term=#{term}&courseID=#{row.id}') #{row.id}
+							else
+								h6
+									a(href='/viewCourseDetails?term=#{term}&courseID=#{row.link}') #{row.id}
 						div(class='ui-block-c')
-						if ( row.id != 'Crs Info' && (row.status == 'Open' || row.status == 'W-List') )
-							h6 
-								a(target='_blank', href='https://www.ursa.ucla.edu/logon/logon.asp?extfunction=enrollclass&extapplication=myucla&uid=000000000&term=#{term}&course=#{row.id}') Enroll Now!
+							if ( row.id != 'Crs Info' && (row.status == 'Open' || row.status == 'W-List') )
+								h6 
+									a(target='_blank', href='https://www.ursa.ucla.edu/logon/logon.asp?extfunction=enrollclass&extapplication=myucla&uid=000000000&term=#{term}&course=#{row.id}') Enroll Now!
 						div(class='ui-block-a') 
 							p Days: #{row.days}
 						div(class='ui-block-b') 
