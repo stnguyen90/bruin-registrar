@@ -7,3 +7,5 @@ This is my Private Repository for my NodeJS Project, Bruin Registrar, a mobile v
 
 # To Do
 - text input with auto suggest/complete for subject
+- favicon
+- desktop landing page
