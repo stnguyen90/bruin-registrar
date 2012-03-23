@@ -7,8 +7,8 @@ div(data-role='page', data-theme='b')
 				label(for='term') Term:
 				select(name='term', id='term') !{terms}
 			div(data-role='fieldcontain')
-				label(for='subject') Subject:
-				select(name='subject', id='subject') !{subjects}
+				label(for='subject', class='ui-input-text') Subject:
+				select(name='subject', id='subject', data-role='none') !{subjects}
 			input(data-theme='e', type='submit', value='Get Classes')
 
 	include includes/footer	

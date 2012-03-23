@@ -1,7 +1,7 @@
 body 
 {
 	padding: 50px;
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	/*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
 
 	background: #CCC;
 }
@@ -44,4 +44,22 @@ a
 .courseheadbold, .bold
 {
 	font-weight: bold;
+}
+
+/*
+	the following makes sure the autocomplete stays above all other inputs
+*/
+ul.ui-autocomplete
+{
+	z-index: 3 !important; 
+	font: 16px;
+}
+
+/*
+	the following increases the size of each list item making it easier
+	to click on
+*/
+ul.ui-autocomplete li.ui-menu-item a
+{
+	padding: .5em 15px .5em 15px;
 }
