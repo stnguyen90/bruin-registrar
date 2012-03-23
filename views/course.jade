@@ -9,10 +9,10 @@ mixin displayData(course)
 					div(class='ui-block-b')
 						if row.id != 'Crs Info' 
 							h6
-								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.id}') #{row.id}
+								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.id}&courseTitle=#{title}') #{row.id}
 						else
 							h6
-								a(href='/viewCourseDetails?term=#{term}&courseID=#{row.link}') #{row.id}
+								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.link}&courseTitle=#{title}') #{row.id}
 					div(class='ui-block-c')
 						if ( row.id != 'Crs Info' && (row.status == 'Open' || row.status == 'W-List') )
 							h6 
@@ -44,8 +44,6 @@ div(data-role='page', data-theme='b')
 	include includes/header
 
 	div(data-role='content')
-		//!{course}
-
 		//div(data-role='collapsible-set')
 		each course in courses
 			if course.lec.search('1') >= 0

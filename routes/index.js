@@ -90,8 +90,6 @@ exports.viewCourse = function(req, res)
 	var course = (req.param('course')) ? req.param('course') : '';
 	var courseTitle = (req.param('courseTitle')) ? unescape(req.param('courseTitle')) : '';
 
-	var ver = (req.param('ver')) ? req.param('ver') : '';
-
 	// uncomment to disable scrape
 	// res.render('index', { title: 'Form', terms: 'terms', subjects: 'subjects' } );
 
@@ -189,7 +187,7 @@ exports.viewCourse = function(req, res)
 				}
 			});
 
-			res.render('course', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
+			res.render('course', { title: courseTitle, 'term' : term, 'subject' : subject, 'courseCode' : course, 'courses' : courses });
 		});
 	}
 	else
@@ -207,6 +205,9 @@ exports.viewCourseDetails = function(req, res)
 		cheerio = require('cheerio');
 
 	var term = (req.param('term')) ? req.param('term') : '';
+	var subject = (req.param('subject')) ? req.param('subject').replace(/\s/g, '+') : '';
+	var course = (req.param('course')) ? req.param('course') : '';
+	var courseTitle = (req.param('courseTitle')) ? unescape(req.param('courseTitle')) : '';
 	var courseID = (req.param('courseID')) ? req.param('courseID') : '';
 
 	// uncomment to disable scrape
@@ -233,7 +234,7 @@ exports.viewCourseDetails = function(req, res)
 
 			var title = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text();
 
-			res.render('courseDetails', { 'title' : title, 'html' : sectionInfo + courseBody });
+			res.render('courseDetails', { 'title' : title, 'term' : term, 'subject' : subject, 'course' : course, 'courseID' : courseID, 'html' : sectionInfo + courseBody });
 		});
 	}
 	else
