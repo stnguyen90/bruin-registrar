@@ -6,6 +6,7 @@ exports.index = function(req, res)
 	var request = require('request'),
 		cheerio = require('cheerio');
 
+	console.log("User Agent: " + req.headers['user-agent']);
 	// uncomment to disable scrape
 	// res.render('index', { title: 'Form', terms: 'terms', subjects: 'subjects' } );
 
