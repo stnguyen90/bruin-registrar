@@ -1,5 +1,9 @@
-div(data-role='content')
-	!{html}
+div(data-role='page', data-theme='b')
+	include includes/header
 
-	a(data-rel='back', data-role='button', data-direction='reverse', data-prefetch) Back
+	div(data-role='content')
+		!{html}
 
+		a(data-rel='back', data-role='button', data-direction='reverse', data-prefetch) Back
+
+	include includes/footer

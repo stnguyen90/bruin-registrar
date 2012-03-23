@@ -6,9 +6,13 @@ html
 		// sets the screen width to the pixel width of the device
 		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0')
 
+		// import css for jQuery UI
+		link(rel='stylesheet', href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/redmond/jquery-ui.css')
+
 		// import jQuery Mobile
 		link(rel='stylesheet', href='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css')
 		script(src='http://code.jquery.com/jquery-1.6.4.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
 		script(src='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js')
 
 		// load custom css
@@ -32,16 +36,5 @@ html
 			})();
 
 	body
-		div(data-role='page', data-theme='b') 
-			// header
-			div(data-role='header', data-theme='b')
-				div
-					h4=title
+		!{body}
 
-			!{body}
-
-			// footer
-			div(data-role='footer', data-theme='b')
-				div
-					h4 Created by 
-						a(href='mailto:stnguyen90@g33kdev.com?Subject=Bruin%20Registrar') Steven Nguyen

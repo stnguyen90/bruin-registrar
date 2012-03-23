@@ -1,4 +1,8 @@
-div(data-role='content')
-	p= error
-	a(data-role='button', data-rel='back', data-prefetch) Back
+div(data-role='page', data-theme='b')
+	include includes/header
 
+	div(data-role='content')
+		p= error
+		a(data-role='button', data-rel='back', data-prefetch) Back
+
+	include includes/footer

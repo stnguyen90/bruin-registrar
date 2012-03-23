@@ -1,9 +1,13 @@
-div(data-role='content')
-	div(data-role='fieldcontain')
-		label Classes:
-		ul(data-role='listview', data-theme='c', data-inset='true')
-			each courseTitle, courseCode in classes
-				li
-					a(href='viewCourse?term=#{term}&subject=#{subject}&course=#{courseCode}&courseTitle=#{courseTitle}') #{courseTitle}
-	a(data-role='button', data-direction='reverse', data-prefetch, href='/') Back
+div(data-role='page', data-theme='b')
+	includes includes/header
 
+	div(data-role='content')
+		div(data-role='fieldcontain')
+			label Classes:
+			ul(data-role='listview', data-theme='c', data-inset='true')
+				each courseTitle, courseCode in classes
+					li
+						a(href='viewCourse?term=#{term}&subject=#{subject}&course=#{courseCode}&courseTitle=#{courseTitle}') #{courseTitle}
+		a(data-role='button', data-direction='reverse', data-prefetch, href='/') Back
+
+	includes includes/footer
