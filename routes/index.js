@@ -62,20 +62,11 @@ exports.listClasses = function(req, res)
 				return;
 			}
 				
-			var classes = {};
 			var classesSelect = $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal');			// retrieve the classes for the specified term and subject
-			// iterate through classes and create an associated array of classCode : classTitle
-			classesSelect.children().each(function(idx, elem)
-			{
-				classes[$(elem).attr('value').replace(/\s/g, '+')] = $(elem).text();
-			});
 			var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
 			var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
 
-			if ( false )
-				res.render('classesListView', { title: termHeader + " - " + subjectHeader, 'term' : term, 'subject' : subject, 'classes' : classes });
-			else
-				res.render('classesSelect', { title: termHeader + " - " + subjectHeader, 'term' : term, 'subject' : subject, 'classes' : classes, 'classesSelect' : classesSelect.html() });
+			res.render('classes', { title: termHeader + " - " + subjectHeader, 'term' : term, 'subject' : subject, 'classesSelect' : classesSelect.html() });
 		});
 
 	}
@@ -198,14 +189,7 @@ exports.viewCourse = function(req, res)
 				}
 			});
 
-			if ( ver == '1' )
-				res.render('courseV1', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else if ( ver == '2' )
-				res.render('courseV2', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else if ( ver == '3' )
-				res.render('courseV3', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else
-				res.render('course', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
+			res.render('course', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
 		});
 	}
 	else
