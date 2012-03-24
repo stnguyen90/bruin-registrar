@@ -44,7 +44,7 @@ exports.listClasses = function(req, res)
 
 	if ( term.length > 0 && subject.length > 0 )
 	{
-		request({ uri:'http://www.registrar.ucla.edu/schedule/crsredir.aspx?termsel=' + term  + '&subareasel=' + subject }, function (error, response, body) 
+		request({ uri:'http://www.registrar.ucla.edu/schedule/crsredir.aspx?termsel=' + term  + '&subareasel=' + escape(subject) }, function (error, response, body) 
 		{
 			if (error && response.statusCode !== 200) 
 			{
@@ -86,8 +86,8 @@ exports.viewCourse = function(req, res)
 		cheerio = require('cheerio');
 
 	var term = (req.param('term')) ? req.param('term') : '';
-	var subject = (req.param('subject')) ? req.param('subject').replace(/\s/g, '+') : '';
-	var course = (req.param('course')) ? req.param('course') : '';
+	var subject = (req.param('subject')) ? escape(req.param('subject').replace(/\s/g, '+')) : '';
+	var course = (req.param('course')) ? req.param('course').replace(/\s/g, '+') : '';
 	var courseTitle = (req.param('courseTitle')) ? unescape(req.param('courseTitle')) : '';
 
 	// uncomment to disable scrape
@@ -95,7 +95,7 @@ exports.viewCourse = function(req, res)
 
 	if ( term.length > 0 && subject.length > 0 && course.length > 0)
 	{
-		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + encodeURIComponent(course) }, function (error, response, body) 
+		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + escape(course) }, function (error, response, body) 
 		{
 			if (error && response.statusCode !== 200) 
 			{
@@ -205,9 +205,8 @@ exports.viewCourseDetails = function(req, res)
 		cheerio = require('cheerio');
 
 	var term = (req.param('term')) ? req.param('term') : '';
-	var subject = (req.param('subject')) ? req.param('subject').replace(/\s/g, '+') : '';
-	var course = (req.param('course')) ? req.param('course') : '';
-	var courseTitle = (req.param('courseTitle')) ? unescape(req.param('courseTitle')) : '';
+	var subject = (req.param('subject')) ? escape(req.param('subject').replace(/\s/g, '+')) : '';
+	var course = (req.param('course')) ? req.param('course').replace(/\s/g, '+') : '';
 	var courseID = (req.param('courseID')) ? req.param('courseID') : '';
 
 	// uncomment to disable scrape
@@ -232,7 +231,7 @@ exports.viewCourseDetails = function(req, res)
 			var sectionInfo = $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').html();
 			var courseBody = $('.tblCourseBody_detselect').html();
 
-			var title = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text();
+			var title = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text().replace(/[^.]*. /, '');
 
 			res.render('courseDetails', { 'title' : title, 'term' : term, 'subject' : subject, 'course' : course, 'courseID' : courseID, 'html' : sectionInfo + courseBody });
 		});

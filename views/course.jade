@@ -9,10 +9,10 @@ mixin displayData(course)
 					div(class='ui-block-b')
 						if row.id != 'Crs Info' 
 							h6
-								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.id}&courseTitle=#{title}') #{row.id}
+								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.id}') #{row.id}
 						else
 							h6
-								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.link}&courseTitle=#{title}') #{row.id}
+								a(href='/viewCourseDetails?term=#{term}&subject=#{subject}&course=#{courseCode}&courseID=#{row.link}') #{row.id}
 					div(class='ui-block-c')
 						if ( row.id != 'Crs Info' && (row.status == 'Open' || row.status == 'W-List') )
 							h6 
