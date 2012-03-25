@@ -26,11 +26,18 @@ var setCourseTitle = function()
 	$.widget( "ui.combobox", {
 		_create: function() {
 			var self = this,
-				select = this.element.hide(),
+				select = this.element,
 				selected = select.children( ":selected" ),
 				value = selected.val() ? selected.text() : "";
+				select.parents('div[data-role="fieldcontain"]').after( $("<div>") );
+
+			var div = select.parents('div[data-role="fieldcontain"]').next();
+				div.attr('data-role', 'fieldcontain');
+				div.append( $('<label/>').attr('for', 'subjectInput') );
+
 			var input = this.input = $( "<input>" )
-				.insertAfter( select )
+				.attr('id', 'subjectInput')
+				.appendTo( div )
 				.val( value )
 				.click( function(event, ui)
 				{
@@ -61,7 +68,8 @@ var setCourseTitle = function()
 						self._trigger( "selected", event, {
 							item: ui.item.option
 						});
-						$('#subject').next().blur(); 
+						$('#subjectInput').blur(); 
+						select.prev().children('span.ui-btn-text').text( ui.item.option.text );
 					},
 					change: function( event, ui ) {
 						if ( !ui.item ) {
@@ -73,6 +81,7 @@ var setCourseTitle = function()
 									return false;
 								}
 							});
+
 							if ( !valid ) {
 								// remove invalid value, as it didn't match anything
 								$( this ).val( "" );
@@ -80,10 +89,14 @@ var setCourseTitle = function()
 								input.data( "autocomplete" ).term = "";
 								return false;
 							}
+							else {
+								select.prev().children('span.ui-btn-text').text( $( this ).val() );
+							}
 						}
 					}
-				})
-				.addClass( "ui-input-text ui-body-b ui-corner-all ui-shadow-inset ui-focus" );
+				});
+
+			div.parent().trigger("create");
 
 			input.data( "autocomplete" )._renderItem = function( ul, item ) {
 				return $( "<li></li>" )
@@ -92,6 +105,10 @@ var setCourseTitle = function()
 					.appendTo( ul );
 			};
 
+			select.change(function()
+			{
+				$('input#subjectInput').val( $( this ).children('option:selected').text() );
+			});
 
 			/*
 			this.button = $( "<button type='button'>&nbsp;</button>" )
