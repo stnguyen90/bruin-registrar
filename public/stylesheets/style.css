@@ -1,7 +1,7 @@
 body 
 {
 	padding: 50px;
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font: "Lucida Grande", Helvetica, Arial, sans-serif;
 
 	background: #CCC;
 }
@@ -14,6 +14,7 @@ a
 .ui-header div, .ui-footer div
 {
 	text-align: center;
+	font-size: 16px;
 }
 
 .ui-footer div h4 a.ui-link
