@@ -15,7 +15,7 @@ exports.index = function(req, res)
 		if (error && response.statusCode !== 200) 
 		{
 			console.log('Error loading the page');
-			res.render('error', { 'title' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+			res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 		}
 
 		var $ = cheerio.load(body);
@@ -50,7 +50,7 @@ exports.listClasses = function(req, res)
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { 'title' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			var $ = cheerio.load(body);
@@ -59,7 +59,8 @@ exports.listClasses = function(req, res)
 			var noClasses = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblNotFoundText').length;		// check if there are any classes
 			if ( noClasses == 1 )	// this element will only exist if there are no classes
 			{
-				res.render('error', { 'title' : 'Sorry!', error : 'No classes are scheduled for this subject area this quarter.'});
+				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text().toLowerCase(); 
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'No classes are scheduled for this subject area for ' + termHeader });
 				return;
 			}
 				
@@ -73,7 +74,7 @@ exports.listClasses = function(req, res)
 
 	}
 	else
-		res.render('error', { 'title' : 'Sorry!', error : 'Please select a term and subject!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Please select a term and subject!'});
 
 };
 
@@ -102,7 +103,7 @@ exports.viewCourse = function(req, res)
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { 'title' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			// the original html from the registrar has extra tags that close the tables 
@@ -194,7 +195,7 @@ exports.viewCourse = function(req, res)
 		});
 	}
 	else
-		res.render('error', { 'title' : 'Sorry!', error : 'Please select a term, subject, and course!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Please select a term, subject, and course!'});
 
 };
 
@@ -222,7 +223,7 @@ exports.viewCourseDetails = function(req, res)
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { 'title' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			// the original html from the registrar has extra tags that close the tables 
@@ -242,6 +243,6 @@ exports.viewCourseDetails = function(req, res)
 		});
 	}
 	else
-		res.render('error', { 'title' : 'Sorry!', error : 'Missing term and/or course ID!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Missing term and/or course ID!'});
 
 };
