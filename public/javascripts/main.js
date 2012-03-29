@@ -22,18 +22,27 @@ var setCourseTitle = function()
 /*
 	set the autocomplete field on the index page
 */
-(function( $ ) {
-	$.widget( "ui.combobox", {
-		_create: function() {
+(function( $ ) 
+{
+	$.widget( "ui.combobox", 
+	{
+		_create: function() 
+		{
 			var self = this,
 				select = this.element,
 				selected = select.children( ":selected" ),
 				value = selected.val() ? selected.text() : "";
-				select.parents('div[data-role="fieldcontain"]').after( $("<div>") );
+			var selectFieldContain = select.parents('div[data-role="fieldcontain"]');
+			selectFieldContain.after( $("<div>") );
 
-			var div = select.parents('div[data-role="fieldcontain"]').next();
-				div.attr('data-role', 'fieldcontain');
-				div.append( $('<label/>').attr('for', 'subjectInput') );
+			// create the jquery mobile field container
+			var div = selectFieldContain.next();
+			div.attr('data-role', 'fieldcontain');
+			div.append( $('<label/>').attr('for', 'subjectInput') );
+
+			// hide the select field
+			// selectFieldContain.hide();
+			// div.find('label').text('Subject:');
 
 			var input = this.input = $( "<input>" )
 				.attr('id', 'subjectInput')
@@ -41,6 +50,7 @@ var setCourseTitle = function()
 				.val( value )
 				.click( function(event, ui)
 				{
+					// clear the input on click
 					input.val(""); 
 				})
 				.autocomplete({
@@ -68,8 +78,8 @@ var setCourseTitle = function()
 						self._trigger( "selected", event, {
 							item: ui.item.option
 						});
-						$('#subjectInput').blur(); 
-						select.prev().children('span.ui-btn-text').text( ui.item.option.text );
+						$('#subjectInput').blur();	// blur to take focus off the input and minimize the keyboard
+						select.prev().children('span.ui-btn-text').text( ui.item.option.text );	// update the select field
 					},
 					change: function( event, ui ) {
 						if ( !ui.item ) {
@@ -82,20 +92,24 @@ var setCourseTitle = function()
 								}
 							});
 
-							if ( !valid ) {
+							if ( !valid ) 
+							{
 								// remove invalid value, as it didn't match anything
 								$( this ).val( "" );
 								select.val( "" );
 								input.data( "autocomplete" ).term = "";
 								return false;
 							}
-							else {
+							else 
+							{
+								// if it is valid, update the select field
 								select.prev().children('span.ui-btn-text').text( $( this ).val() );
 							}
 						}
 					}
 				});
 
+			// convert input into jquery mobile input
 			div.parent().trigger("create");
 
 			input.data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -105,43 +119,16 @@ var setCourseTitle = function()
 					.appendTo( ul );
 			};
 
+			// on changing of select field, update the input field as well
 			select.change(function()
 			{
 				$('input#subjectInput').val( $( this ).children('option:selected').text() );
 			});
 
-			/*
-			this.button = $( "<button type='button'>&nbsp;</button>" )
-				.attr( "tabIndex", -1 )
-				.attr( "title", "Show All Items" )
-				.insertAfter( input )
-				.button({
-					icons: {
-						primary: "ui-icon-triangle-1-s"
-					},
-					text: false
-				})
-				.removeClass( "ui-corner-all" )
-				.addClass( "ui-corner-right ui-button-icon" )
-				.click(function() {
-					// close if already visible
-					if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
-						input.autocomplete( "close" );
-						return;
-					}
-
-					// work around a bug (likely same cause as #5265)
-					$( this ).blur();
-
-					// pass empty string as value to search for, displaying all results
-					input.autocomplete( "search", "" );
-					input.focus();
-				});
-			*/
-			
+		
 		},
-
-		destroy: function() {
+		destroy: function() 
+		{
 			this.input.remove();
 			this.element.show();
 			$.Widget.prototype.destroy.call( this );
@@ -149,6 +136,8 @@ var setCourseTitle = function()
 	});
 })( jQuery );
 
-$(function() {
-	$( "#subject" ).combobox();
+$(function() 
+{
+	if ( $('div#index').length > 0 )
+		$( "#subject" ).combobox();
 });

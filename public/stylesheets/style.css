@@ -63,3 +63,11 @@ ul.ui-autocomplete li.ui-menu-item a
 {
 	padding: .5em 15px .5em 15px;
 }
+
+/*
+	remove the bottom border on field containers
+*/
+.ui-br
+{
+	border-bottom: 0px;
+}
