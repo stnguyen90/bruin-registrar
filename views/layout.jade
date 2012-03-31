@@ -40,14 +40,13 @@ html
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 			})();
 
-			$('document').on('pageshow', function (event, ui) 
+			$(document).on('pageshow', function (event, ui) 
 			{
 				try 
 				{
 					_gaq.push(['_setAccount', 'UA-30126195-1']);
 					_gaq.push(['_setDomainName', 'bruinregistrar.com']);
 					_gaq.push(['_setAllowLinker', true]);
-					_gaq.push(['_trackPageview']);
 
 					hash = location.hash;
 
