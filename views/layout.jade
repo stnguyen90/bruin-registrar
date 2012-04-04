@@ -1,7 +1,10 @@
 !!!
 html
 	head
-		title= title
+		title=title
+
+		// set meta data
+		meta(name='Description', content='Mobile Version of the UCLA Schedule of Classes')
 
 		// sets the screen width to the pixel width of the device
 		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0')
@@ -11,7 +14,7 @@ html
 
 		// import jQuery Mobile
 		link(rel='stylesheet', href='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css')
-		script(src='http://code.jquery.com/jquery-1.6.4.min.js')
+		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
 		script(src='http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js')
 
@@ -24,16 +27,40 @@ html
 		// Google Analytics
 		script(type='text/javascript')
 			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-30126195-1']);
-			_gaq.push(['_setDomainName', 'bruinregistrar.com']);
-			_gaq.push(['_setAllowLinker', true]);
-			_gaq.push(['_trackPageview']);
+			/*
+				_gaq.push(['_setAccount', 'UA-30126195-1']);
+				_gaq.push(['_setDomainName', 'bruinregistrar.com']);
+				_gaq.push(['_setAllowLinker', true]);
+				_gaq.push(['_trackPageview']);
 
+			*/
 			(function() {
 				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 			})();
+
+			$(document).on('pageshow', function (event, ui) 
+			{
+				try 
+				{
+					_gaq.push(['_setAccount', 'UA-30126195-1']);
+					_gaq.push(['_setDomainName', 'bruinregistrar.com']);
+					_gaq.push(['_setAllowLinker', true]);
+
+					hash = location.hash;
+
+					if (hash) {
+						_gaq.push(['_trackPageview', hash.substr(1)]);
+					} else {
+						_gaq.push(['_trackPageview']);
+					}
+				} 
+				catch(err) 
+				{
+
+				}
+			});
 
 	body
 		!{body}

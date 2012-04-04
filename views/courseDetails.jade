@@ -4,6 +4,6 @@ div(data-role='page', data-theme='b')
 	div(data-role='content')
 		!{html}
 
-		a(data-rel='back', data-role='button', data-direction='reverse', data-prefetch) Back
+		a(data-role='button', data-direction='reverse', data-prefetch, href='/viewCourse?term=#{term}&subject=#{subject}&course=#{course}&courseTitle=#{header.replace(/^[^-]*- /g, '').replace(/\s/g, '+')}') Back
 
 	include includes/footer

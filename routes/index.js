@@ -1,3 +1,4 @@
+var title = 'Bruin Registrar';
 /*
  * Home page where you can select term and subject
  */
@@ -14,7 +15,7 @@ exports.index = function(req, res)
 		if (error && response.statusCode !== 200) 
 		{
 			console.log('Error loading the page');
-			res.render('error', { title : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+			res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 		}
 
 		var $ = cheerio.load(body);
@@ -22,7 +23,7 @@ exports.index = function(req, res)
 		// cheerio is now loaded on the window created from 'body'
 		var termSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstTermDisp').html();			// retrieve the terms
 		var subjectSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea').html();	// retrieve the subjects
-		res.render('index', { title : 'Bruin Registrar', terms : termSelect, subjects : subjectSelect });
+		res.render('index', { 'title' : 'UCLA Schedule of Classes for Mobile Devices | ' + title , header : 'Bruin Registrar', 'terms' : termSelect, 'subjects' : subjectSelect });
 	});
 };
 
@@ -44,12 +45,12 @@ exports.listClasses = function(req, res)
 
 	if ( term.length > 0 && subject.length > 0 )
 	{
-		request({ uri:'http://www.registrar.ucla.edu/schedule/crsredir.aspx?termsel=' + term  + '&subareasel=' + subject }, function (error, response, body) 
+		request({ uri:'http://www.registrar.ucla.edu/schedule/crsredir.aspx?termsel=' + term  + '&subareasel=' + escape(subject) }, function (error, response, body) 
 		{
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { title : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			var $ = cheerio.load(body);
@@ -58,29 +59,22 @@ exports.listClasses = function(req, res)
 			var noClasses = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblNotFoundText').length;		// check if there are any classes
 			if ( noClasses == 1 )	// this element will only exist if there are no classes
 			{
-				res.render('error', { title : 'Sorry!', error : 'No classes are scheduled for this subject area this quarter.'});
+				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text().toLowerCase(); 
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'No classes are scheduled for this subject area for ' + termHeader });
 				return;
 			}
 				
-			var classes = {};
 			var classesSelect = $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal');			// retrieve the classes for the specified term and subject
-			// iterate through classes and create an associated array of classCode : classTitle
-			classesSelect.children().each(function(idx, elem)
-			{
-				classes[$(elem).attr('value').replace(/\s/g, '+')] = $(elem).text();
-			});
 			var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
 			var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
 
-			if ( false )
-				res.render('classesListView', { title: termHeader + " - " + subjectHeader, 'term' : term, 'subject' : subject, 'classes' : classes });
-			else
-				res.render('classesSelect', { title: termHeader + " - " + subjectHeader, 'term' : term, 'subject' : subject, 'classes' : classes, 'classesSelect' : classesSelect.html() });
+			var header = termHeader + ' - ' + subjectHeader
+			res.render('classes', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'classesSelect' : classesSelect.html() });
 		});
 
 	}
 	else
-		res.render('error', { title : 'Sorry!', error : 'Please select a term and subject!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Please select a term and subject!'});
 
 };
 
@@ -95,23 +89,21 @@ exports.viewCourse = function(req, res)
 		cheerio = require('cheerio');
 
 	var term = (req.param('term')) ? req.param('term') : '';
-	var subject = (req.param('subject')) ? req.param('subject').replace(/\s/g, '+') : '';
-	var course = (req.param('course')) ? req.param('course') : '';
+	var subject = (req.param('subject')) ? escape(req.param('subject').replace(/\s/g, '+')) : '';
+	var course = (req.param('course')) ? req.param('course').replace(/\s/g, '+') : '';
 	var courseTitle = (req.param('courseTitle')) ? unescape(req.param('courseTitle')) : '';
-
-	var ver = (req.param('ver')) ? req.param('ver') : '';
 
 	// uncomment to disable scrape
 	// res.render('index', { title: 'Form', terms: 'terms', subjects: 'subjects' } );
 
 	if ( term.length > 0 && subject.length > 0 && course.length > 0)
 	{
-		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + encodeURIComponent(course) }, function (error, response, body) 
+		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + escape(course) }, function (error, response, body) 
 		{
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { title : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			// the original html from the registrar has extra tags that close the tables 
@@ -121,7 +113,7 @@ exports.viewCourse = function(req, res)
 			var $ = cheerio.load(body);
 
 			// cheerio is now loaded on the window created from 'body'
-			var courseHTML = $('div#ctl00_BodyContentPlaceHolder_detselect_pnlBodyContent');
+			var termHeader = $('#ctl00_BodyContentPlaceHolder_detselect_lblTermHeader').text();
 
 			var courses = [];
 			var headerIdx = 0;
@@ -198,18 +190,12 @@ exports.viewCourse = function(req, res)
 				}
 			});
 
-			if ( ver == '1' )
-				res.render('courseV1', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else if ( ver == '2' )
-				res.render('courseV2', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else if ( ver == '3' )
-				res.render('courseV3', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
-			else
-				res.render('course', { title: courseTitle, 'term' : term, 'subject' : subject, 'course' : courseHTML.html(), 'courses' : courses });
+			var header = termHeader + ' - ' + courseTitle;
+			res.render('course', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'courseCode' : course, 'courses' : courses });
 		});
 	}
 	else
-		res.render('error', { title : 'Sorry!', error : 'Please select a term, subject, and course!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Please select a term, subject, and course!'});
 
 };
 
@@ -223,6 +209,8 @@ exports.viewCourseDetails = function(req, res)
 		cheerio = require('cheerio');
 
 	var term = (req.param('term')) ? req.param('term') : '';
+	var subject = (req.param('subject')) ? escape(req.param('subject').replace(/\s/g, '+')) : '';
+	var course = (req.param('course')) ? req.param('course').replace(/\s/g, '+') : '';
 	var courseID = (req.param('courseID')) ? req.param('courseID') : '';
 
 	// uncomment to disable scrape
@@ -235,7 +223,7 @@ exports.viewCourseDetails = function(req, res)
 			if (error && response.statusCode !== 200) 
 			{
 				console.log('Error loading the page');
-				res.render('error', { title : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
+				res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Could not access the UCLA Registrar.'});
 			}
 
 			// the original html from the registrar has extra tags that close the tables 
@@ -244,15 +232,17 @@ exports.viewCourseDetails = function(req, res)
 			var $ = cheerio.load(body);
 
 			// cheerio is now loaded on the window created from 'body'
+			var termHeader = $('#ctl00_BodyContentPlaceHolder_subdet_lblTermHeader').text();
 			var sectionInfo = $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').html();
 			var courseBody = $('.tblCourseBody_detselect').html();
 
-			var title = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text();
+			var courseTitle = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text().replace(/[^.]*. /, '');
 
-			res.render('courseDetails', { 'title' : title, 'html' : sectionInfo + courseBody });
+			var header = termHeader + ' - ' + courseTitle;
+			res.render('courseDetails', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'course' : course, 'courseID' : courseID, 'html' : sectionInfo + courseBody });
 		});
 	}
 	else
-		res.render('error', { title : 'Sorry!', error : 'Missing term and/or course ID!'});
+		res.render('error', { 'title' : title, 'header' : 'Sorry!', error : 'Missing term and/or course ID!'});
 
 };
