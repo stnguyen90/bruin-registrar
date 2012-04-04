@@ -1,4 +1,4 @@
-div(data-role='page', data-theme='b', id='index')
+div(data-role='page', data-theme='b', id='indexPage')
 	include includes/header
 
 	div(data-role='content')
@@ -6,7 +6,16 @@ div(data-role='page', data-theme='b', id='index')
 			div(data-role='fieldcontain')
 				label(for='term') Term:
 				select(name='term', id='term') !{terms}
-			div(data-role='fieldcontain')
+			div(data-role='fieldcontain', id='subjectDisplayField')
+				fieldset(data-role='controlgroup', data-type='horizontal', class='ui-grid-a', data-mini='true')
+					legend Subject Selection Style:
+					div(class='ui-block-a')
+						input(type='radio', name='subjectDisplay', id='select', value='subjectSelectField', checked='checked') 
+						label(for='select') Select
+					div(class='ui-block-b')
+						input(type='radio', name='subjectDisplay', id='input', value='subjectInputField')
+						label(for='input') Input
+			div(data-role='fieldcontain', id='subjectSelectField')
 				label(for='subject', class='ui-input-text') Subject:
 				select(name='subject', id='subject') !{subjects}
 			input(data-theme='e', type='submit', value='Get Classes')

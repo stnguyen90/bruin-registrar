@@ -22,7 +22,7 @@ var setCourseTitle = function()
 /*
 	set the autocomplete field on the index page
 */
-(function( $ ) 
+$(document).on('pagecreate', '#indexPage', function(e) 
 {
 	$.widget( "ui.combobox", 
 	{
@@ -38,11 +38,12 @@ var setCourseTitle = function()
 			// create the jquery mobile field container
 			var div = selectFieldContain.next();
 			div.attr('data-role', 'fieldcontain');
+			div.attr('id', 'subjectInputField');
 			div.append( $('<label/>').attr('for', 'subjectInput') );
 
 			// hide the select field
 			// selectFieldContain.hide();
-			// div.find('label').text('Subject:');
+			div.find('label').text('Subject:');
 
 			var input = this.input = $( "<input>" )
 				.attr('id', 'subjectInput')
@@ -52,6 +53,7 @@ var setCourseTitle = function()
 				{
 					// clear the input on click
 					input.val(""); 
+					$('#subjectInput').css('color' ,'#333');
 				})
 				.autocomplete({
 					delay: 0,
@@ -125,7 +127,7 @@ var setCourseTitle = function()
 				$('input#subjectInput').val( $( this ).children('option:selected').text() );
 			});
 
-		
+			// create the switch between select and input field
 		},
 		destroy: function() 
 		{
@@ -134,10 +136,23 @@ var setCourseTitle = function()
 			$.Widget.prototype.destroy.call( this );
 		}
 	});
-})( jQuery );
+});
 
-$(function() 
+$(document).on('pageinit', '#indexPage', function(e) 
 {
-	if ( $('div#index').length > 0 )
-		$( "#subject" ).combobox();
+	$("#subject").combobox();
+	$("#subjectInputField").hide();
+	$("#subjectDisplayField [name='subjectDisplay']").change( function(e)
+	{
+		var selected = $(this).val();
+		$("#subjectInputField").hide();
+		$("#subjectSelectField").hide();
+		$("#" + selected).show();
+		
+	});
+	/*
+	$('#subjectDisplayField').hide();
+	$("#subjectInputField").toggle();
+	$("#subjectSelectField").toggle();
+	*/
 });

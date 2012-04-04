@@ -56,6 +56,14 @@ ul.ui-autocomplete
 }
 
 /*
+	make the font color for the subjectInput place holder lighter 
+*/
+#subjectInput
+{
+	color: #999;
+}
+
+/*
 	the following increases the size of each list item making it easier
 	to click on
 */
@@ -71,3 +79,24 @@ ul.ui-autocomplete li.ui-menu-item a
 {
 	border-bottom: 0px;
 }
+
+/* 
+	decrease space between Subject Selection Style field and other fields
+*/
+#subjectDisplayField, #subjectDisplayField fieldset
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+/*
+	the following makes the Subject Selection Style field fill the width
+*/
+#subjectDisplayField label, #subjectDisplayField .ui-radio
+{
+	width: 100%;
+	text-align: center;
+}
+
+
+
