@@ -19,7 +19,6 @@ app.configure(function(){
 	app.use(app.router);
 	//app.use(express.static(__dirname + '/public'));
 	app.use(gzippo.staticGzip(__dirname + '/public'));	// use gzip compression
-	app.use(gzippo.staticGzip(__dirname + '/'));		// use gzip compression
 });
 
 app.configure('development', function(){
