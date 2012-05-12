@@ -1,11 +1,24 @@
 {
-    "name": "UCLAMobileRegistrar"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.8"
-    , "jade": ">= 0.0.1"
-	, "jsdom": ">= 0.2.12"
-	, "request": ">= 2.9.100"
+  "name": "UCLAMobileRegistrar",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "cheerio": ">= 0.6.2",
+    "express": "2.5.8",
+    "gzippo": ">= 0.1.4",
+    "jade": ">= 0.0.1",
+    "jsdom": ">= 0.2.12",
+    "request": ">= 2.9.100"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "v0.6.8"
+  },
+  "author": "Steven Nguyen <stnguyen90@g33kdev.com>",
+  "description": "Mobile Version of the UCLA Schedule of Classes",
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:stnguyen90/bruinregistrar.git"
   }
 }
