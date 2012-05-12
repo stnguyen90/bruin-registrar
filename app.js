@@ -4,7 +4,7 @@
  */
 
 var express = require('express'),
-	gzippo = require('gzippo'),
+//	gzippo = require('gzippo'),
 	routes = require('./routes');
 
 var app = module.exports = express.createServer();
@@ -17,8 +17,8 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	//app.use(express.static(__dirname + '/public'));
-	app.use(gzippo.staticGzip(__dirname + '/public'));	// use gzip compression
+	app.use(express.static(__dirname + '/public'));
+	//app.use(gzippo.staticGzip(__dirname + '/public'));	// use gzip compression
 });
 
 app.configure('development', function(){
