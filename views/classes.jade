@@ -4,9 +4,10 @@ div(data-role='page', data-theme='b')
 	div(data-role='content')
 		form(method='get', action='viewCourse')
 			div(data-role='fieldcontain')
-				label(for='course') Classes:
-				select(name='course', id='course')
-					!{classesSelect}
+				each classes, i in classesSelect
+					label(for='course') #{label[i]} Classes:
+					select(name='course', id='course')
+						!{classes}
 			input(type='hidden', name='term', value='#{term}')
 			input(type='hidden', name='subject', value='#{subject}')
 			input(type='hidden', name='courseTitle')

@@ -3,20 +3,23 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express'),
+	gzippo = require('gzippo'),
+	routes = require('./routes');
 
 var app = module.exports = express.createServer();
 
 // Configuration
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(app.router);
+	//app.use(express.static(__dirname + '/public'));
+	app.use(gzippo.staticGzip(__dirname + '/public'));	// use gzip compression
+	app.use(gzippo.staticGzip(__dirname + '/'));		// use gzip compression
 });
 
 app.configure('development', function(){

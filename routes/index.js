@@ -64,12 +64,47 @@ exports.listClasses = function(req, res)
 				return;
 			}
 				
-			var classesSelect = $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal');			// retrieve the classes for the specified term and subject
-			var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
-			var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
+			if ( term.substring(2) == "1" )	// summer
+			{
+				// retrieve the classes for summer (session A, B, and C)
+				var classesSelect = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionA').html()];
+				classesSelect.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionB').html() );
+				classesSelect.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionC').html() );
 
-			var header = termHeader + ' - ' + subjectHeader
-			res.render('classes', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'classesSelect' : classesSelect.html() });
+				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();				// retrieve the human readable term
+				// retrieve the human readable subject
+				var subjectHeader = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderSessionA').text()];
+				subjectHeader.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderSessionB').text() );
+				subjectHeader.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderSessionC').text() );
+
+				// build the header text
+				var header = termHeader + ' - ';
+				for ( var i in subjectHeader )
+				{
+					if ( subjectHeader[i].search('-') >= 0 )
+					{
+						header += subjectHeader[i].substring(0, subjectHeader[i].search('-'));
+						break;
+					}
+				}
+
+				// list the labels for each select
+				var label = ['Session A', 'Session B', 'Session C'];
+			}
+			else							// fall, winter, spring quater
+			{
+				var classesSelect = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal').html()];	// retrieve the classes for the specified term and subject
+				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
+				var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
+
+				// build the header text
+				var header = termHeader + ' - ' + subjectHeader;
+
+				// list the labels for each select
+				var label = [''];
+			}
+
+			res.render('classes', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'label' : label, 'classesSelect' : classesSelect });
 		});
 
 	}
