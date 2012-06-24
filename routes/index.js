@@ -21,9 +21,26 @@ exports.index = function(req, res)
 		var $ = cheerio.load(body);
 
 		// cheerio is now loaded on the window created from 'body'
-		var termSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstTermDisp').html();			// retrieve the terms
-		var subjectSelect = $('#ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea').html();	// retrieve the subjects
-		res.render('index', { 'title' : 'UCLA Schedule of Classes for Mobile Devices | ' + title , header : 'Bruin Registrar', 'terms' : termSelect, 'subjects' : subjectSelect });
+		
+		// retrieve the terms
+		var terms = [];
+		$('#ctl00_BodyContentPlaceHolder_SOCmain_lstTermDisp option').each(function( idx, elem ){
+			elem = $(elem);
+			terms[idx] = {};
+			terms[idx].val = elem.attr("value");
+			terms[idx].text = $(elem).text();
+		});
+
+		// retrieve the subjects
+		var subjects = [];
+		$('#ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea option').each(function( idx, elem ){
+			elem = $(elem);
+			subjects[idx] = {};
+			subjects[idx].val = elem.attr("value");
+			subjects[idx].text = elem.text();
+		});
+
+		res.render('index', { 'title' : 'UCLA Schedule of Classes for Mobile Devices | ' + title , header : 'Bruin Registrar', 'terms' : terms, 'subjects' : subjects });
 	});
 };
 
@@ -33,7 +50,6 @@ exports.index = function(req, res)
  */
 exports.listClasses = function(req, res)
 {
-	
 	var request = require('request'),
 		cheerio = require('cheerio');
 
@@ -64,13 +80,10 @@ exports.listClasses = function(req, res)
 				return;
 			}
 				
+			var sessions = [];
+
 			if ( term.substring(2) == "1" )	// summer
 			{
-				// retrieve the classes for summer (session A, B, and C)
-				var classesSelect = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionA').html()];
-				classesSelect.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionB').html() );
-				classesSelect.push( $('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseSessionC').html() );
-
 				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();				// retrieve the human readable term
 				// retrieve the human readable subject
 				var subjectHeader = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderSessionA').text()];
@@ -88,23 +101,48 @@ exports.listClasses = function(req, res)
 					}
 				}
 
-				// list the labels for each select
-				var label = ['Session A', 'Session B', 'Session C'];
+				// retrieve the classes for summer (session A, B, and C)
+				$('#ctl00_BodyContentPlaceHolder_crsredir1_pnlSummer select').each(function( idx, elem ){
+					var session = { 'name' : '', 'courses' : [] };
+					session.name = 'Session ' + $(elem).attr('id').substring(55);
+
+					$(elem).children().each(function( idx, elem ){
+						elem = $(elem);
+						session.courses[idx] = {};
+						session.courses[idx].code = elem.attr('value');
+						session.courses[idx].title = elem.text();
+					});
+
+					sessions.push(session);
+				});
 			}
 			else							// fall, winter, spring quater
 			{
-				var classesSelect = [$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal').html()];	// retrieve the classes for the specified term and subject
 				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
 				var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
 
 				// build the header text
 				var header = termHeader + ' - ' + subjectHeader;
 
-				// list the labels for each select
-				var label = [''];
+				var session = { 'name' : '', 'courses' : [] };
+
+				// retrieve the classes for the specified term and subject
+				$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal option').each(function( idx, elem ){
+					elem = $(elem);
+					session.courses[idx] = {};
+					session.courses[idx].code = elem.attr('value');
+					session.courses[idx].title = elem.text();
+				});
+
+				// add the name of the session
+				session.name = termHeader;
+
+				// add the session to end of the sessions array
+				sessions.push(session);
+
 			}
 
-			res.render('classes', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'label' : label, 'classesSelect' : classesSelect });
+			res.render('classes', { 'title' : header + ' | ' + title, 'header' : header, 'term' : term, 'subject' : subject, 'sessions' : sessions });
 		});
 
 	}
@@ -133,7 +171,12 @@ exports.viewCourse = function(req, res)
 
 	if ( term.length > 0 && subject.length > 0 && course.length > 0)
 	{
-		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + escape(course) }, function (error, response, body) 
+		var summer = '';
+
+		if ( term.substring(2) == "1" )
+			summer = '_summer';
+
+		request({ uri:'http://www.registrar.ucla.edu/schedule/detselect' + summer + '.aspx?termsel=' + term + '&subareasel=' + subject + '&idxcrs=' + escape(course) }, function (error, response, body) 
 		{
 			if (error && response.statusCode !== 200) 
 			{
@@ -148,13 +191,13 @@ exports.viewCourse = function(req, res)
 			var $ = cheerio.load(body);
 
 			// cheerio is now loaded on the window created from 'body'
-			var termHeader = $('#ctl00_BodyContentPlaceHolder_detselect_lblTermHeader').text();
+			var termHeader = $('#ctl00_BodyContentPlaceHolder_detselect' + summer + '_lblTermHeader').text();
 
 			var courses = [];
 			var headerIdx = 0;
 			var courseIdx = 0;
 			// retrieve table headers
-			$('div#ctl00_BodyContentPlaceHolder_detselect_pnlBodyContent').children('table.dgdTemplateGrid').each(function(i, elem)	// retrieve tables
+			$('div#ctl00_BodyContentPlaceHolder_detselect' + summer + '_pnlBodyContent').children('table.dgdTemplateGrid').each(function(i, elem)	// retrieve tables
 			{
 				var table = $(elem);
 				// console.log("id = " + table.attr('id'));

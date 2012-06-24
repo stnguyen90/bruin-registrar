@@ -1,23 +1,25 @@
-div(data-role='page', data-theme='b', id='indexPage')
+div(data-role='page', data-theme='b', id='indexTermsPage', data-dom-cache='true')
 	include includes/header
 
 	div(data-role='content')
-		form(method='get', action='listClasses')
-			div(data-role='fieldcontain')
-				label(for='term') Term:
-				select(name='term', id='term') !{terms}
-			div(data-role='fieldcontain', id='subjectDisplayField')
-				fieldset(data-role='controlgroup', data-type='horizontal', class='ui-grid-a', data-mini='true')
-					legend Subject Selection Style:
-					div(class='ui-block-a')
-						input(type='radio', name='subjectDisplay', id='select', value='subjectSelectField', checked='checked') 
-						label(for='select') Select
-					div(class='ui-block-b')
-						input(type='radio', name='subjectDisplay', id='input', value='subjectInputField')
-						label(for='input') Input
-			div(data-role='fieldcontain', id='subjectSelectField')
-				label(for='subject', class='ui-input-text') Subject:
-				select(name='subject', id='subject') !{subjects}
-			input(data-theme='e', type='submit', value='Get Classes')
+		h2 Select a Term
+		ul(data-role='listview', data-inset='true', data-theme='c')
+			each term in terms
+				li
+					a(href="#indexSubjectsPage?term=#{term.val}") #{term.text}
+
+	include includes/footer	
+
+div(data-role='page', data-theme='b', id='indexSubjectsPage', data-dom-cache='true')
+	include includes/header
+
+	div(data-role='content')
+		h2 Select a Subject
+		ul(data-role='listview', data-inset='true', data-theme='c', data-filter='true', data-filter-placeholder='Input a subject to filter...')
+			each subject in subjects
+				li(href='listClasses?subject=#{subject.val}', onclick='setTerm()')
+					a #{subject.text}
+
+		a(data-role='button', href='/', data-direction='reverse') Back
 
 	include includes/footer	

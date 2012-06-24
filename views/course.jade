@@ -1,6 +1,6 @@
 mixin displayData(course)
 	h3 #{course.lec} - #{course.fac}
-	ul(data-role='listview')
+	ul(data-role='listview', data-theme='c')
 		each row in course.data
 			li
 				div(class='ui-grid-b')
@@ -45,8 +45,8 @@ div(data-role='page', data-theme='b')
 
 	div(data-role='content')
 		//div(data-role='collapsible-set')
-		each course in courses
-			if course.lec.search('1') >= 0
+		each course, idx in courses
+			if idx == 0
 				div(data-role='collapsible', data-collapsed='false')
 					mixin displayData(course)
 			else
