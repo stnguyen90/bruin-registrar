@@ -122,8 +122,11 @@ exports.listClasses = function(req, res)
 			}
 			else							// fall, winter, spring quater
 			{
+				var version = 'Normal';
 				var termHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblTermHeader').text();			// retrieve the human readable term
-				var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeaderNormal').text();	// retrieve the human readable subject
+				if ( termHeader.search('Tentative') >= 0 )
+					version = 'Tentative';
+				var subjectHeader = $('#ctl00_BodyContentPlaceHolder_crsredir1_lblSAHeader' + version).text();	// retrieve the human readable subject
 
 				// build the header text
 				var header = termHeader + ' - ' + subjectHeader;
@@ -131,7 +134,7 @@ exports.listClasses = function(req, res)
 				var session = { 'name' : '', 'courses' : [] };
 
 				// retrieve the classes for the specified term and subject
-				$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal option').each(function( idx, elem ){
+				$('#ctl00_BodyContentPlaceHolder_crsredir1_lstCourse' + version + ' option').each(function( idx, elem ){
 					elem = $(elem);
 					session.courses[idx] = {};
 					session.courses[idx].code = elem.attr('value');
@@ -315,7 +318,7 @@ exports.viewCourseDetails = function(req, res)
 
 			// cheerio is now loaded on the window created from 'body'
 			var termHeader = $('#ctl00_BodyContentPlaceHolder_subdet_lblTermHeader').text();
-			var sectionInfo = $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').html();
+			var sectionInfo = $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').length > 0 ? $('#ctl00_BodyContentPlaceHolder_subdet_pnlSectionInfo').html() : '';
 			var courseBody = $('.tblCourseBody_detselect').html();
 
 			var courseTitle = $('#ctl00_BodyContentPlaceHolder_subdet_lblCourseHeader').text().replace(/[^.]*. /, '');

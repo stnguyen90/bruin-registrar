@@ -8,8 +8,12 @@ div(data-role='page', data-theme='b', id='courses')
 				li(data-role='list-divider')
 					#{session.name}
 				each course in session.courses
-					li(href='viewCourse?course=#{course.code}', onclick='setCourseTitle()')
-						a #{course.title}
+					if header.search('Tentative') >= 0
+						li
+							a(href='viewCourseDetails?term=#{term}&courseID=#{course.code}') #{course.title}
+					else
+						li(href='viewCourse?course=#{course.code}', onclick='setCourseTitle()')
+							a #{course.title}
 
 		a(data-role='button', data-direction='reverse', data-prefetch, href='/#indexSubjectsPage?term=#{term}', data-ajax='false') Back
 
