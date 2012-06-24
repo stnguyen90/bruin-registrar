@@ -8,7 +8,11 @@ This is my Private Repository for my NodeJS Project, Bruin Registrar, a mobile v
 # To Do
 - ~~course info and discussion info links~~
 - view full site by clicking title
-- text input with auto suggest/complete for subject
-- favicon
+- ~~text input with auto suggest/complete for subject~~
+- ~~favicon~~
 - desktop landing page
-- better titles
+- ~~better titles~~
+
+# News
+## Version 2.1
+- Bug Fix: tentative schedules now visible
