@@ -30,7 +30,6 @@ app.configure('production', function(){
 });
 
 // Routes
-
 app.get('/', routes.index);
 app.get('/listClasses', routes.listClasses);
 app.get('/viewCourse', routes.viewCourse);

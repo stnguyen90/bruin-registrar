@@ -1,17 +1,16 @@
-div(data-role='page', data-theme='b')
+div(data-role='page', data-theme='b', id='courses')
 	include includes/header
 
 	div(data-role='content')
-		form(method='get', action='viewCourse')
-			div(data-role='fieldcontain')
-				each classes, i in classesSelect
-					label(for='course') #{label[i]} Classes:
-					select(name='course', id='course')
-						!{classes}
-			input(type='hidden', name='term', value='#{term}')
-			input(type='hidden', name='subject', value='#{subject}')
-			input(type='hidden', name='courseTitle')
-			input(data-theme='e', type='submit', onclick='setCourseTitle()', value='View Course')
-			a(data-role='button', data-direction='reverse', data-prefetch, href='/') Back
+		h2 Select a Course
+		ul(data-role='listview', data-inset='true', data-theme='c', data-filter='true', data-filter-placeholder='Input a number to filter...')
+			each session in sessions
+				li(data-role='list-divider')
+					#{session.name}
+				each course in session.courses
+					li(href='viewCourse?course=#{course.code}', onclick='setCourseTitle()')
+						a #{course.title}
+
+		a(data-role='button', data-direction='reverse', data-prefetch, href='/#indexSubjectsPage?term=#{term}', data-ajax='false') Back
 
 	include includes/footer

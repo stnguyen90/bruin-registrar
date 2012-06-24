@@ -1,158 +1,87 @@
 /*
-	grab the course title and pass that on to the following 
-	alternative solution is to create a hidden field and fill the field on click before submitting
-*/
-var viewCourse = function(term, subject)
+	set the term before submitting
+	used in index.jade
+ */
+var setTerm = function(e)
 {
-	var courseTitle = $('select[name=course] option:selected').html().replace(/[^-]*- /, '');
-	var course = $('select[name=course] option:selected').val();
+	if (!e) var e = window.event;
 
-	location.href = 'viewCourse?term=' + term + '&subject=' + subject.replace(/\s/g, '+') + '&course=' + course.replace(/\s/g, '+') + '&courseTitle=' + escape(courseTitle);
-};
+	var currPage = $(e.target).parents('div[data-role="page"]');
+
+	var href = $(e.target).parents('li').attr('href').split('?')[0];
+	var subject = $(e.target).parents('li').attr('href').split('?')[1].split('&')[0].split('=')[1];
+	var term = currPage.attr('data-url').split('?')[1].split('=')[1];
+
+	//$(e.target).attr('href', href + '?subject=' + subject + '&term=' + term);
+	$.mobile.changePage(href, {
+		data : {
+			'subject' : subject,
+			'term' : term
+		}
+	})
+}
 
 /*
 	set the course title before submitting
+	used in classes.jade
 */
 var setCourseTitle = function()
 {
-	var courseTitle = $('select[name=course] option:selected').html().replace(/[^-]*- /, '');
-	$('input[name=courseTitle]').val(courseTitle);
+	if (!e) var e = window.event;
+
+	var href = $(e.target).parents('li').attr('href').split('?')[0];
+	var course = $(e.target).parents('li').attr('href').split('?')[1].split('&')[0].split('=')[1];
+	var term = getUrlVars()['term'];
+	var subject = getUrlVars()['subject'];
+	var courseTitle = $(e.target).parents('li').text().replace(/[^-]*- /, '');
+
+	//$(e.target).attr('href', href + '?course=' + course + '&term=' + term + '&subject=' + subject + '&courseTitle=' + courseTitle);
+	$.mobile.changePage(href, {
+		data : {
+			'course' : course,
+			'term' : term,
+			'subject' : subject,
+			'courseTitle' : courseTitle
+		}
+	})
 };
 
 /*
-	set the autocomplete field on the index page
-*/
-$(document).on('pagecreate', '#indexPage', function(e) 
+	extract a get parameter from the URL
+ */
+var getUrlVars = function() 
 {
-	$.widget( "ui.combobox", 
-	{
-		_create: function() 
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+
+$(document).on('pagecreate', '#indexSubjectsPage', function(){
+	var page = $('#indexSubjectsPage');
+
+	// create list dividers for subjects to make it easier to see different subjects
+	var lastLeadingChar = '';
+	page.find('ul li').each(function( idx, elem ){
+		var currLeadingChar = $(elem).text().substring(0,1);
+		if ( currLeadingChar != lastLeadingChar )
 		{
-			var self = this,
-				select = this.element,
-				selected = select.children( ":selected" ),
-				value = selected.val() ? selected.text() : "";
-			var selectFieldContain = select.parents('div[data-role="fieldcontain"]');
-			selectFieldContain.after( $("<div>") );
-
-			// create the jquery mobile field container
-			var div = selectFieldContain.next();
-			div.attr('data-role', 'fieldcontain');
-			div.attr('id', 'subjectInputField');
-			div.append( $('<label/>').attr('for', 'subjectInput') );
-
-			// hide the select field
-			// selectFieldContain.hide();
-			div.find('label').text('Subject:');
-
-			var input = this.input = $( "<input>" )
-				.attr('id', 'subjectInput')
-				.appendTo( div )
-				.val( value )
-				.click( function(event, ui)
-				{
-					// clear the input on click
-					input.val(""); 
-					$('#subjectInput').css('color' ,'#333');
-				})
-				.autocomplete({
-					delay: 0,
-					minLength: 0,
-					source: function( request, response ) {
-						var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-						response( select.children( "option" ).map(function() {
-							var text = $( this ).text();
-							if ( this.value && ( !request.term || matcher.test(text) ) )
-								return {
-									label: text.replace(
-										new RegExp(
-											"(?![^&;]+;)(?!<[^<>]*)(" +
-											$.ui.autocomplete.escapeRegex(request.term) +
-											")(?![^<>]*>)(?![^&;]+;)", "gi"
-										), "<strong>$1</strong>" ),
-									value: text,
-									option: this
-								};
-						}) );
-					},
-					select: function( event, ui ) {
-						ui.item.option.selected = true;
-						self._trigger( "selected", event, {
-							item: ui.item.option
-						});
-						$('#subjectInput').blur();	// blur to take focus off the input and minimize the keyboard
-						select.prev().children('span.ui-btn-text').text( ui.item.option.text );	// update the select field
-					},
-					change: function( event, ui ) {
-						if ( !ui.item ) {
-							var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
-								valid = false;
-							select.children( "option" ).each(function() {
-								if ( $( this ).text().match( matcher ) ) {
-									this.selected = valid = true;
-									return false;
-								}
-							});
-
-							if ( !valid ) 
-							{
-								// remove invalid value, as it didn't match anything
-								$( this ).val( "" );
-								select.val( "" );
-								input.data( "autocomplete" ).term = "";
-								return false;
-							}
-							else 
-							{
-								// if it is valid, update the select field
-								select.prev().children('span.ui-btn-text').text( $( this ).val() );
-							}
-						}
-					}
-				});
-
-			// convert input into jquery mobile input
-			div.parent().trigger("create");
-
-			input.data( "autocomplete" )._renderItem = function( ul, item ) {
-				return $( "<li></li>" )
-					.data( "item.autocomplete", item )
-					.append( "<a>" + item.label + "</a>" )
-					.appendTo( ul );
-			};
-
-			// on changing of select field, update the input field as well
-			select.change(function()
-			{
-				$('input#subjectInput').val( $( this ).children('option:selected').text() );
-			});
-
-			// create the switch between select and input field
-		},
-		destroy: function() 
-		{
-			this.input.remove();
-			this.element.show();
-			$.Widget.prototype.destroy.call( this );
+			$(elem).before('<li data-role="list-divider">' + currLeadingChar + '</li>');
 		}
+
+		lastLeadingChar = currLeadingChar;
 	});
+
 });
 
-$(document).on('pageinit', '#indexPage', function(e) 
-{
-	$("#subject").combobox();
-	$("#subjectInputField").hide();
-	$("#subjectDisplayField [name='subjectDisplay']").change( function(e)
-	{
-		var selected = $(this).val();
-		$("#subjectInputField").hide();
-		$("#subjectSelectField").hide();
-		$("#" + selected).show();
-		
-	});
-	/*
-	$('#subjectDisplayField').hide();
-	$("#subjectInputField").toggle();
-	$("#subjectSelectField").toggle();
-	*/
+$(document).on('pagechange', '#indexSubjectsPage', function(){
+	var page = $('#indexSubjectsPage');
+
+	// update the link in the url to match data-url
+	// this ensures the url parameter, term, is up to date
+	location.hash = page.attr('data-url');
+
+
 });
