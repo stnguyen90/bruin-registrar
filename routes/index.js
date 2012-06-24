@@ -1,9 +1,13 @@
 var title = 'Bruin Registrar';
+var url = 'http://www.bruinregistrar.com/';
 /*
  * Home page where you can select term and subject
  */
 exports.index = function(req, res)
-{	
+{
+	if ( req.header('host').search('bruinregistrar.com') < 0 && req.header('host').search(':3000') < 0 )
+		res.redirect(url, 301)
+
 	var request = require('request'),
 		cheerio = require('cheerio');
 
